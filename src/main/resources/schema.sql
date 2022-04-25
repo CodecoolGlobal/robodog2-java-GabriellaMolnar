@@ -39,20 +39,21 @@ CREATE TABLE skill
 ALTER TABLE pedigree
     ADD FOREIGN KEY (puppy_id)
     REFERENCES dog(id)
-    ON DELETE SET NULL;
+    ON DELETE CASCADE;
 ALTER TABLE pedigree
     ADD FOREIGN KEY (mom_id)
     REFERENCES dog(id)
-    ON DELETE SET NULL;
+    ON DELETE CASCADE;
 ALTER TABLE pedigree
     ADD FOREIGN KEY (dad_id)
     REFERENCES dog(id)
-    ON DELETE SET NULL;
+    ON DELETE CASCADE;
 
 ALTER TABLE skill
     ADD FOREIGN KEY (dog_id)
     REFERENCES dog(id)
-    ON DELETE SET NULL;
+    ON DELETE CASCADE;
+
 ALTER TABLE skill
     ADD FOREIGN KEY (trick_id)
     REFERENCES trick(id)

@@ -1,5 +1,6 @@
 package com.codecool.robodog2.model;
 
+import com.codecool.robodog2.dto.DogDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Dog {
@@ -17,6 +18,12 @@ public class Dog {
     }
 
     public Dog() {
+    }
+
+    public Dog(DogDto dogDto) {
+        this.breed = dogDto.getBreed();
+        this.name = dogDto.getName();
+        this.age = dogDto.getAge();
     }
 
     public Breed getBreed() {

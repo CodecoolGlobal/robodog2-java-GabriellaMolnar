@@ -1,9 +1,9 @@
 package com.codecool.robodog2.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
-@RequestMapping("/{trick}")
+@RestController
+@RequestMapping("/trick")
 public class TrickController {
 }
