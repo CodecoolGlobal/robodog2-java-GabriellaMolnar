@@ -1,9 +1,19 @@
 package com.codecool.robodog2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Trick {
 
+    @JsonIgnore
     private long id;
     private String name;
+
+    public Trick() {
+    }
+
+    public Trick(String name) {
+        this.name = name;
+    }
 
     public long getId() {
         return id;

@@ -57,4 +57,4 @@ ALTER TABLE skill
 ALTER TABLE skill
     ADD FOREIGN KEY (trick_id)
     REFERENCES trick(id)
-    ON DELETE SET NULL;
+    ON DELETE CASCADE ;

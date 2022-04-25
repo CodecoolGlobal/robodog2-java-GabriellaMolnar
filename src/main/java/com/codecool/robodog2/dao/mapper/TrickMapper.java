@@ -10,7 +10,7 @@ import java.sql.SQLException;
 @Component
 public class TrickMapper implements RowMapper<Trick> {
     @Override
-    public Trick mapRow(ResultSet rs, int i) throws SQLException {
+    public Trick mapRow(ResultSet rs, int rowNum) throws SQLException {
         Trick trick = new Trick();
         trick.setId(rs.getLong("id"));
         trick.setName(rs.getString("name"));
