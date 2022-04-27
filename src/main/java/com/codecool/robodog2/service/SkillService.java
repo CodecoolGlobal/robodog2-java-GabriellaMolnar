@@ -43,11 +43,9 @@ public class SkillService {
         return skillJdbcDao.dogsWithTrick(trickId);
     }
 
-    public Optional<Skill> getSkillOfDog(long dogId){
-        return skillJdbcDao.getSkillOfDog(dogId);
+    public Optional<Skill> getSkillOfDog(long dogId, long trickId){
+        return skillJdbcDao.getSkillOfDog(dogId, trickId);
     }
 
-    public Optional<Skill> getSkillOfTrick(long trickId){
-        return skillJdbcDao.getSkillOfTrick(trickId);
-    }
+
 }

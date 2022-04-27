@@ -13,8 +13,8 @@ public class SkillMapper implements RowMapper<Skill> {
     public Skill mapRow(ResultSet rs, int rowNum) throws SQLException {
         Skill skill = new Skill();
         skill.setId(rs.getLong("id"));
-        skill.setDogId(rs.getLong("dogId"));
-        skill.setTrickId(rs.getLong("trickId"));
+        skill.setDogId(rs.getLong("dog_id"));
+        skill.setTrickId(rs.getLong("trick_id"));
         skill.setLevel(rs.getInt("level"));
         return skill;
     }

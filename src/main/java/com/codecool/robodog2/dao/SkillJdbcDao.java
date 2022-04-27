@@ -1,9 +1,9 @@
 package com.codecool.robodog2.dao;
 
+import com.codecool.robodog2.dao.mapper.DogMapper;
 import com.codecool.robodog2.dao.mapper.SkillMapper;
 import com.codecool.robodog2.model.Dog;
 import com.codecool.robodog2.model.Skill;
-import jdk.jpackage.internal.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -18,34 +18,42 @@ public class SkillJdbcDao implements SkillDAO {
     private static final Logger log = LoggerFactory.getLogger(DogJdbcDao.class);
     private JdbcTemplate jdbcTemplate;
     private SkillMapper skillMapper;
+    private DogMapper dogMapper;
+
+    public SkillJdbcDao(JdbcTemplate jdbcTemplate, SkillMapper skillMapper, DogMapper dogMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.skillMapper = skillMapper;
+        this.dogMapper = dogMapper;
+    }
 
     @Override
     public void addSkill(Skill skill) {
-        String sql = "INSERT INTO skill (dogId, trickId, level) VALUES (?,?,?)";
+        String sql = "INSERT INTO skill (dog_id, trick_id, level) VALUES (?,?,?)";
         int insert = jdbcTemplate.update(sql, skill.getDogId(), skill.getTrickId(), skill.getLevel());
         if (insert == 1) {
+            //TODO id-t nem tudja visszaadni, egyelőre 0-t ad, aminek nincs értelme
             log.info("Skill inserted " + skill.getId());
         }
     }
 
     @Override
     public List<Skill> listSkills() {
-        String sql = "SELECT id, dogId, trickID, level from skill";
+        String sql = "SELECT id, dog_id, trick_id, level from skill";
         return jdbcTemplate.query(sql, skillMapper);
     }
 
     @Override
     public Skill getSkill(long id) {
-        String sql = "SELECT id, dogId, trickID, level from skill WHERE id = ?";
+        String sql = "SELECT id, dog_id, trick_id, level from skill WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, skillMapper, id);
     }
 
     @Override
     public void updateSkill(Skill skill, long id) {
-        String sql = "UPDATE skill SET dogId = ?, trickId = ?, level = ? WHERE id = ?";
+        String sql = "UPDATE skill SET dog_id = ?, trick_id = ?, level = ? WHERE id = ?";
         int update = jdbcTemplate.update(sql, skill.getDogId(), skill.getTrickId(), skill.getLevel(), id);
         if (update == 1) {
-            log.info("Skill updated " + skill.getId());
+            log.info("Skill updated " + id);
         }
     }
 
@@ -57,30 +65,18 @@ public class SkillJdbcDao implements SkillDAO {
 
     @Override
     public List<Dog> dogsWithTrick(long trickId) {
-        //TODO
-        return null;
+        String sql = "SELECT dog.id, breed, age, name from dog JOIN skill ON dog.id = skill.dog_id WHERE trick_id = ? ";
+        return jdbcTemplate.query(sql, dogMapper, trickId);
     }
 
     @Override
-    public Optional<Skill> getSkillOfDog(long dogId) {
-        String sql = "SELECT id, dogId, trickID, level from skill WHERE dogId = ?";
+    public Optional<Skill> getSkillOfDog(long dogId, long trickId) {
+        String sql = "SELECT id, dog_id, trick_id, level from skill WHERE dog_id = ? AND trick_id = ?";
         Skill skill = null;
         try {
-            skill = jdbcTemplate.queryForObject(sql, new Object[]{dogId}, skillMapper);
+            skill = jdbcTemplate.queryForObject(sql, skillMapper,  dogId, trickId);
         } catch (DataAccessException ex) {
-            Log.info("Skill not found" + dogId);
-        }
-        return Optional.ofNullable(skill);
-    }
-
-    @Override
-    public Optional<Skill> getSkillOfTrick(long trickId) {
-        String sql = "SELECT id, dogId, trickID, level from skill WHERE trickId) = ?";
-        Skill skill = null;
-        try {
-            skill = jdbcTemplate.queryForObject(sql, new Object[]{trickId}, skillMapper);
-        } catch (DataAccessException ex) {
-            Log.info("Skill not found" + trickId);
+            log.info("Skill not found " + dogId + " " + trickId);
         }
         return Optional.ofNullable(skill);
     }

@@ -21,41 +21,38 @@ public class SkillController {
     }
 
     @PostMapping
-    public void addSkill(@RequestBody SkillDto skillDto){
+    public void addSkill(@RequestBody SkillDto skillDto) {
         skillService.addSkill(skillDto);
     }
 
     @GetMapping
-    public List<Skill> listSkills(){
+    public List<Skill> listSkills() {
         return skillService.listSkills();
     }
 
     @GetMapping("/{skill_id}")
-    public  Skill getSkill(@PathVariable("skill_id") long id){
+    public Skill getSkill(@PathVariable("skill_id") long id) {
         return skillService.getSkill(id);
     }
 
     @PutMapping("/{skill_id}")
-    public void updateSkill(@RequestBody SkillDto skillDto, @PathVariable("skill_id") long id){
+    public void updateSkill(@RequestBody SkillDto skillDto, @PathVariable("skill_id") long id) {
         skillService.updateSkill(skillDto, id);
     }
 
     @DeleteMapping("/{skill_id}")
-    public void deleteSkill(@PathVariable("skill_id") long id){
+    public void deleteSkill(@PathVariable("skill_id") long id) {
         skillService.deleteSkill(id);
     }
-    @GetMapping
-    public  List<Dog> dogsWithTrick(long trickId){
+
+    @GetMapping("/dogs/{trickId}")
+    public List<Dog> dogsWithTrick(@PathVariable long trickId) {
         return skillService.dogsWithTrick(trickId);
     }
 
-    @GetMapping("/{dogId}")
-    public  Optional<Skill> getSkillOfDog(@PathVariable long dogId){
-        return skillService.getSkillOfDog(dogId);
+    @GetMapping("/dog/{dogId}/trick/{trickId}")
+    public Optional<Skill> getSkillOfDog(@PathVariable long dogId, @PathVariable long trickId) {
+        return skillService.getSkillOfDog(dogId, trickId);
     }
 
-    @GetMapping("/{trickId}")
-    public  Optional<Skill> getSkillOfTrick(long trickId){
-        return skillService.getSkillOfTrick(trickId);
-    }
 }

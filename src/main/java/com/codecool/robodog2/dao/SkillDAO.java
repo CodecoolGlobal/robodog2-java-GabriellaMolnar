@@ -19,7 +19,6 @@ public interface SkillDAO {
 
     List<Dog> dogsWithTrick(long trickId);
 
-    Optional<Skill> getSkillOfDog(long dogId);
+    Optional<Skill> getSkillOfDog(long dogId, long trickId);
 
-    Optional<Skill> getSkillOfTrick(long trickId);
 }

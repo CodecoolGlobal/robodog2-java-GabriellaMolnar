@@ -1,11 +1,9 @@
 package com.codecool.robodog2.model;
 
 import com.codecool.robodog2.dto.SkillDto;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Skill {
 
-    @JsonIgnore
     private long id;
     private long dogId;
     private long trickId;
