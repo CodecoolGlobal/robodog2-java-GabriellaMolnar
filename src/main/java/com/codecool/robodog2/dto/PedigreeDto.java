@@ -1,30 +1,16 @@
-package com.codecool.robodog2.model;
+package com.codecool.robodog2.dto;
 
-import com.codecool.robodog2.dto.PedigreeDto;
-
-public class Pedigree {
-
-    private long id;
+public class PedigreeDto {
     private long puppyId;
     private long momId;
     private long dadId;
 
 
-    public Pedigree() {
-    }
+    public PedigreeDto(long momId, long dadId, long puppyId) {
+        this.puppyId = puppyId;
+        this.momId = momId;
+        this.dadId = dadId;
 
-    public Pedigree(PedigreeDto pedigreeDto) {
-        this.momId = pedigreeDto.getMomId();
-        this.dadId = pedigreeDto.getDadId();
-        this.puppyId = pedigreeDto.getPuppyId();
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public long getMomId() {
