@@ -55,4 +55,13 @@ public class SkillController {
         return skillService.getSkillOfDog(dogId, trickId);
     }
 
+    @GetMapping("/trick/{trickName}/dog/{dogId}")
+    public Skill getLevelOfaTrickAndDog(@PathVariable String trickName, @PathVariable long dogId) {
+        return skillService.getLevelOfaTrickAndDog(trickName, dogId);
+    }
+
+    @PutMapping("/trick/{trickName}/dog/{dogId}")
+    public void updateLevel(@PathVariable String trickName, @PathVariable long dogId) {
+        skillService.updateLevel(trickName, dogId);
+    }
 }

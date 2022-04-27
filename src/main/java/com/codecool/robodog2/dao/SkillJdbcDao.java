@@ -2,6 +2,7 @@ package com.codecool.robodog2.dao;
 
 import com.codecool.robodog2.dao.mapper.DogMapper;
 import com.codecool.robodog2.dao.mapper.SkillMapper;
+import com.codecool.robodog2.dao.mapper.TrickMapper;
 import com.codecool.robodog2.model.Dog;
 import com.codecool.robodog2.model.Skill;
 import org.slf4j.Logger;
@@ -19,11 +20,13 @@ public class SkillJdbcDao implements SkillDAO {
     private JdbcTemplate jdbcTemplate;
     private SkillMapper skillMapper;
     private DogMapper dogMapper;
+    private TrickMapper trickMapper;
 
-    public SkillJdbcDao(JdbcTemplate jdbcTemplate, SkillMapper skillMapper, DogMapper dogMapper) {
+    public SkillJdbcDao(JdbcTemplate jdbcTemplate, SkillMapper skillMapper, DogMapper dogMapper, TrickMapper trickMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.skillMapper = skillMapper;
         this.dogMapper = dogMapper;
+        this.trickMapper = trickMapper;
     }
 
     @Override
@@ -31,8 +34,7 @@ public class SkillJdbcDao implements SkillDAO {
         String sql = "INSERT INTO skill (dog_id, trick_id, level) VALUES (?,?,?)";
         int insert = jdbcTemplate.update(sql, skill.getDogId(), skill.getTrickId(), skill.getLevel());
         if (insert == 1) {
-            //TODO id-t nem tudja visszaadni, egyelőre 0-t ad, aminek nincs értelme
-            log.info("Skill inserted " + skill.getId());
+            log.info("Skill inserted ");
         }
     }
 
@@ -74,10 +76,25 @@ public class SkillJdbcDao implements SkillDAO {
         String sql = "SELECT id, dog_id, trick_id, level from skill WHERE dog_id = ? AND trick_id = ?";
         Skill skill = null;
         try {
-            skill = jdbcTemplate.queryForObject(sql, skillMapper,  dogId, trickId);
+            skill = jdbcTemplate.queryForObject(sql, skillMapper, dogId, trickId);
         } catch (DataAccessException ex) {
             log.info("Skill not found " + dogId + " " + trickId);
         }
         return Optional.ofNullable(skill);
+    }
+
+    @Override
+    public Skill getLevelOfaTrickAndDog(String trickName, long dogId) {
+        String sql = "SELECT skill.id, dog_id, trick_id, level FROM skill JOIN trick ON skill.trick_id = trick.id WHERE dog_id = ? AND name LIKE ?";
+        return jdbcTemplate.queryForObject(sql, skillMapper, dogId, trickName);
+    }
+
+    @Override
+    public void updateLevel(String trickName, long dogId, int newLevel) {
+        String sql = "UPDATE skill SET level = ? WHERE dog_id = ? AND trick_id = (SELECT trick.id FROM trick WHERE name LIKE ?) ";
+        int update = jdbcTemplate.update(sql, newLevel, dogId, trickName);
+        if (update == 1) {
+            log.info("Skill updated " + trickName + " " + dogId);
+        }
     }
 }

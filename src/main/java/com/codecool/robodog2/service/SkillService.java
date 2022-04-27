@@ -19,32 +19,42 @@ public class SkillService {
         this.skillJdbcDao = skillJdbcDao;
     }
 
-    public void addSkill(SkillDto skillDto){
+    public void addSkill(SkillDto skillDto) {
         skillJdbcDao.addSkill(new Skill(skillDto));
     }
 
-    public List<Skill> listSkills(){
+    public List<Skill> listSkills() {
         return skillJdbcDao.listSkills();
     }
 
-    public Skill getSkill(long id){
+    public Skill getSkill(long id) {
         return skillJdbcDao.getSkill(id);
     }
 
-    public void updateSkill(SkillDto skillDto, long id){
+    public void updateSkill(SkillDto skillDto, long id) {
         skillJdbcDao.updateSkill(new Skill(skillDto), id);
     }
 
-    public  void deleteSkill(long id){
+    public void deleteSkill(long id) {
         skillJdbcDao.deleteSkill(id);
     }
 
-    public List<Dog> dogsWithTrick(long trickId){
+    public List<Dog> dogsWithTrick(long trickId) {
         return skillJdbcDao.dogsWithTrick(trickId);
     }
 
-    public Optional<Skill> getSkillOfDog(long dogId, long trickId){
+    public Optional<Skill> getSkillOfDog(long dogId, long trickId) {
         return skillJdbcDao.getSkillOfDog(dogId, trickId);
+    }
+
+    public Skill getLevelOfaTrickAndDog(String trickName, long dogId) {
+        return skillJdbcDao.getLevelOfaTrickAndDog(trickName, dogId);
+    }
+
+    public void updateLevel(String trickName, long dogId) {
+        int oldLevel = getLevelOfaTrickAndDog(trickName, dogId).getLevel();
+        int newLevel = oldLevel >= 3 ? oldLevel : oldLevel + 1;
+        skillJdbcDao.updateLevel(trickName, dogId, newLevel);
     }
 
 
