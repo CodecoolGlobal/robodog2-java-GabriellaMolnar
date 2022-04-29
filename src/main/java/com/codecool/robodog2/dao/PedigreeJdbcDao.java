@@ -1,6 +1,7 @@
 package com.codecool.robodog2.dao;
 
 import com.codecool.robodog2.dao.mapper.PedigreeMapper;
+import com.codecool.robodog2.model.Dog;
 import com.codecool.robodog2.model.Pedigree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,10 +15,12 @@ public class PedigreeJdbcDao implements PedigreeDao {
     private static final Logger log = LoggerFactory.getLogger(DogJdbcDao.class);
     private JdbcTemplate jdbcTemplate;
     private PedigreeMapper pedigreeMapper;
+    private DogJdbcDao dogJdbcDao;
 
-    public PedigreeJdbcDao(JdbcTemplate jdbcTemplate, PedigreeMapper pedigreeMapper) {
+    public PedigreeJdbcDao(JdbcTemplate jdbcTemplate, PedigreeMapper pedigreeMapper, DogJdbcDao dogJdbcDao) {
         this.jdbcTemplate = jdbcTemplate;
         this.pedigreeMapper = pedigreeMapper;
+        this.dogJdbcDao = dogJdbcDao;
     }
 
     @Override
@@ -65,5 +68,22 @@ public class PedigreeJdbcDao implements PedigreeDao {
         if (insert == 1) {
             log.info("Pedigree inserted " + pedigree + " to dog " + pedigree.getId());
         }
+    }
+
+    @Override
+    public void createPuppyPedigree(Pedigree pedigree, Dog littleDog) {
+        addPedigree(pedigree);
+        dogJdbcDao.addDog(littleDog);
+    }
+
+    public long getDad(long puppyId) {
+        String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE puppy_id = ?";
+        return jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId).getDadId();
+    }
+
+    @Override
+    public long getMom(long puppyId) {
+        String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE puppy_id = ?";
+        return jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId).getMomId();
     }
 }

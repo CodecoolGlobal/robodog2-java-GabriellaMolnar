@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pedigree")
+@RequestMapping
 public class PedigreeController {
     private PedigreeService pedigreeService;
 
@@ -19,27 +19,27 @@ public class PedigreeController {
         this.pedigreeService = pedigreeService;
     }
 
-    @PostMapping
+    @PostMapping("/pedigree")
     public void addPedigree(@RequestBody PedigreeDto pedigreeDto) {
         pedigreeService.addPedigree(pedigreeDto);
     }
 
-    @GetMapping
+    @GetMapping("/pedigree")
     public List<Pedigree> listPedigrees() {
         return pedigreeService.listPedigrees();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/pedigree/{id}")
     public Pedigree getPedigree(@PathVariable long id) {
         return pedigreeService.getPedigree(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/pedigree/{id}")
     public void updatePedigree(@RequestBody PedigreeDto pedigreeDto, @PathVariable long id) {
         pedigreeService.updatePedigree(pedigreeDto, id);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/pedigree/{id}")
     public void deletePedigree(@PathVariable long id) {
         pedigreeService.deletePedigree(id);
     }
@@ -53,4 +53,17 @@ public class PedigreeController {
         pedigreeService.addPedigreeForADog(puppyId, pedigreeForADogDtoDto);
     }
 
+    @PostMapping("/dog/puppy")
+    public void addPuppy(@RequestBody String name, @RequestBody long mommId, @RequestBody long dadId) {
+        pedigreeService.addPuppy(name, mommId, dadId);
+    }
+
+    @GetMapping("/dog/{dog_id}/pedigree/dad")
+    public long getDad(@PathVariable("dog_id") long puppyId){
+        return pedigreeService.getDad(puppyId);
+    }
+    @GetMapping("/dog/{dog_id}/pedigree/mom")
+    public long getMom(@PathVariable("dog_id") long puppyId){
+        return pedigreeService.getMom(puppyId);
+    }
 }
