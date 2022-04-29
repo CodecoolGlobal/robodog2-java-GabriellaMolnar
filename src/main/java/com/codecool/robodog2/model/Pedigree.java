@@ -1,6 +1,7 @@
 package com.codecool.robodog2.model;
 
 import com.codecool.robodog2.dto.PedigreeDto;
+import com.codecool.robodog2.dto.PedigreeForADogDto;
 
 public class Pedigree {
 
@@ -17,6 +18,11 @@ public class Pedigree {
         this.momId = pedigreeDto.getMomId();
         this.dadId = pedigreeDto.getDadId();
         this.puppyId = pedigreeDto.getPuppyId();
+    }
+
+    public Pedigree(PedigreeForADogDto pedigreeForADogDto) {
+        this.momId = pedigreeForADogDto.getMomId();
+        this.dadId = pedigreeForADogDto.getDadId();
     }
 
     public long getId() {

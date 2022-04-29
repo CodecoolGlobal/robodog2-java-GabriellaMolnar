@@ -1,10 +1,10 @@
 package com.codecool.robodog2.controller;
 
 import com.codecool.robodog2.dto.PedigreeDto;
+import com.codecool.robodog2.dto.PedigreeForADogDto;
 import com.codecool.robodog2.model.Pedigree;
 import com.codecool.robodog2.service.PedigreeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +42,15 @@ public class PedigreeController {
     @DeleteMapping("/{id}")
     public void deletePedigree(@PathVariable long id) {
         pedigreeService.deletePedigree(id);
+    }
+
+    @GetMapping("/dog/{dog_id}/pedigree")
+    public List<Integer> getFamily(@PathVariable("dog_id") long puppyId){
+       return pedigreeService.getFamily(puppyId);
+    }
+    @PostMapping("/dog/{dog_id}/pedigree")
+    public void addPedigreeForADog(@PathVariable("dog_id") long puppyId, @RequestBody PedigreeForADogDto pedigreeForADogDtoDto){
+        pedigreeService.addPedigreeForADog(puppyId, pedigreeForADogDtoDto);
     }
 
 }

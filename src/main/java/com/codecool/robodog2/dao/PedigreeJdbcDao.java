@@ -1,7 +1,6 @@
 package com.codecool.robodog2.dao;
 
 import com.codecool.robodog2.dao.mapper.PedigreeMapper;
-import com.codecool.robodog2.dao.mapper.SkillMapper;
 import com.codecool.robodog2.model.Pedigree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ public class PedigreeJdbcDao implements PedigreeDao {
         this.jdbcTemplate = jdbcTemplate;
         this.pedigreeMapper = pedigreeMapper;
     }
-
 
     @Override
     public void addPedigree(Pedigree pedigree) {
@@ -53,5 +51,19 @@ public class PedigreeJdbcDao implements PedigreeDao {
     public void deletePedigree(long id) {
         String sql = "DELETE from pedigree WHERE id = ? ";
         jdbcTemplate.update(sql, id);
+    }
+
+    public List<Integer> getFamily(long puppyId) {
+        String sql = "SELECT id FROM pedigree where id = ?";
+        //TODO
+        return null; //jdbcTemplate.query(sql, pedigreeMapper, id);
+    }
+
+    public void addPedigreeForADog(Pedigree pedigree) {
+        String sql = "INSERT INTO pedigree (PUPPY_ID, MOM_ID, DAD_ID) VALUES (?,?,?)";
+        int insert = jdbcTemplate.update(sql, pedigree.getPuppyId(), pedigree.getMomId(), pedigree.getDadId());
+        if (insert == 1) {
+            log.info("Pedigree inserted " + pedigree + " to dog " + pedigree.getId());
+        }
     }
 }

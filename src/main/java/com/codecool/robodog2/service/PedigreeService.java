@@ -2,6 +2,7 @@ package com.codecool.robodog2.service;
 
 import com.codecool.robodog2.dao.PedigreeJdbcDao;
 import com.codecool.robodog2.dto.PedigreeDto;
+import com.codecool.robodog2.dto.PedigreeForADogDto;
 import com.codecool.robodog2.model.Pedigree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,15 @@ public class PedigreeService {
 
     public void deletePedigree(long id) {
         pedigreeJdbcDao.deletePedigree(id);
+    }
+
+    public List<Integer> getFamily(long puppyId) {
+        return pedigreeJdbcDao.getFamily(puppyId);
+    }
+
+    public  void addPedigreeForADog(long puppyId, PedigreeForADogDto pedigreeForADogDto) {
+        Pedigree pedigreeForTheDog = new Pedigree(pedigreeForADogDto);
+        pedigreeForTheDog.setPuppyId(puppyId);
+        pedigreeJdbcDao.addPedigreeForADog(pedigreeForTheDog);
     }
 }
