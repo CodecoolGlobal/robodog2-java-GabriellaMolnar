@@ -1,16 +1,15 @@
 package com.codecool.robodog2.dao;
 
 import com.codecool.robodog2.dao.mapper.PedigreeMapper;
-import com.codecool.robodog2.model.Dog;
 import com.codecool.robodog2.model.Pedigree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository("pedigreeJdbcDao")
 public class PedigreeJdbcDao implements PedigreeDao {
     private static final Logger log = LoggerFactory.getLogger(DogJdbcDao.class);
     private JdbcTemplate jdbcTemplate;
@@ -71,9 +70,8 @@ public class PedigreeJdbcDao implements PedigreeDao {
     }
 
     @Override
-    public void createPuppyPedigree(Pedigree pedigree, Dog littleDog) {
+    public void createPuppyPedigree(Pedigree pedigree) {
         addPedigree(pedigree);
-        dogJdbcDao.addDog(littleDog);
     }
 
     public long getDad(long puppyId) {

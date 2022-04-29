@@ -1,13 +1,16 @@
 package com.codecool.robodog2.service;
 
+import com.codecool.robodog2.dao.DogDAO;
 import com.codecool.robodog2.dao.DogJdbcDao;
 import com.codecool.robodog2.dao.PedigreeJdbcDao;
 import com.codecool.robodog2.dto.PedigreeDto;
 import com.codecool.robodog2.dto.PedigreeForADogDto;
+import com.codecool.robodog2.dto.PuppyNameAndParentsDto;
 import com.codecool.robodog2.model.Breed;
 import com.codecool.robodog2.model.Dog;
 import com.codecool.robodog2.model.Pedigree;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,12 +20,12 @@ import java.util.Random;
 public class PedigreeService {
 
     private PedigreeJdbcDao pedigreeJdbcDao;
-    private DogJdbcDao dogJdbcDao;
+    private DogDAO dogDAO;
 
     @Autowired
-    public PedigreeService(PedigreeJdbcDao pedigreeJdbcDao, DogJdbcDao dogJdbcDao) {
+    public PedigreeService(PedigreeJdbcDao pedigreeJdbcDao, @Qualifier("dogJdbcDao") DogDAO dogDAO) {
         this.pedigreeJdbcDao = pedigreeJdbcDao;
-        this.dogJdbcDao = dogJdbcDao;
+        this.dogDAO = dogDAO;
     }
 
     public void addPedigree(PedigreeDto pedigreeDto) {
@@ -55,35 +58,30 @@ public class PedigreeService {
         pedigreeJdbcDao.addPedigreeForADog(pedigreeForTheDog);
     }
 
-    public void addPuppy(String name, long mommId, long dadId) {
-        Dog littleDog = new Dog();
-        littleDog.setName(name);
-        littleDog.setAge(0);
-        littleDog.setBreed(puppyBreed(mommId, dadId));
-        Pedigree pedigree = new Pedigree();
-        pedigree.setPuppyId(littleDog.getId());
-        pedigree.setMomId(mommId);
-        pedigree.setDadId(dadId);
-        pedigreeJdbcDao.createPuppyPedigree(pedigree, littleDog);
+    public void addPuppy(PuppyNameAndParentsDto puppyNameAndParentsDto) {
+        Breed breed = puppyBreed(puppyNameAndParentsDto.getMomId(), puppyNameAndParentsDto.getDadId());
+        Dog littleDog = new Dog(breed, puppyNameAndParentsDto.getName(), 0);
+        long littleDogId = dogDAO.addDogAndReturnId(littleDog);
 
+        Pedigree pedigree = new Pedigree(littleDogId, puppyNameAndParentsDto.getMomId(), puppyNameAndParentsDto.getDadId());
+        pedigreeJdbcDao.createPuppyPedigree(pedigree);
     }
 
     private Breed puppyBreed(long momId, long dadId) {
         Random r = new Random();
         int randomBreedNumber = r.nextInt(2);
         if (randomBreedNumber == 0) {
-            //TODO, az jó, ha beautowirelem a dogJdbcDao-t?
-             return dogJdbcDao.getDog(momId).getBreed();
+            return dogDAO.getDog(momId).getBreed();
         } else {
-          return  dogJdbcDao.getDog(dadId).getBreed();
+            return dogDAO.getDog(dadId).getBreed();
         }
     }
 
-    public long getDad(long puppyId) {
-       return pedigreeJdbcDao.getDad(puppyId);
+    public Dog getDad(long puppyId) {
+        return dogDAO.getDog(pedigreeJdbcDao.getDad(puppyId));
     }
 
-    public long getMom(long puppyId) {
-        return pedigreeJdbcDao.getMom(puppyId);
+    public Dog getMom(long puppyId) {
+        return dogDAO.getDog(pedigreeJdbcDao.getMom(puppyId));
     }
 }

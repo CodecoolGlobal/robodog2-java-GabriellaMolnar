@@ -8,13 +8,13 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
 
-@Component
+@Repository("dogJdbcDao")
 public class DogJdbcDao implements DogDAO {
 
     private static final Logger log = LoggerFactory.getLogger(DogJdbcDao.class);
@@ -46,7 +46,7 @@ public class DogJdbcDao implements DogDAO {
         String sql = "SELECT id, breed, name, age from dog WHERE id = ?";
         Dog dog = null;
         try {
-            dog = jdbcTemplate.queryForObject(sql, new Object[]{id}, dogMapper);
+            dog = jdbcTemplate.queryForObject(sql, dogMapper, id);
         } catch (DataAccessException ex) {
             log.info("Course not found" + id);
         }

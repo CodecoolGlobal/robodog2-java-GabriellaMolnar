@@ -1,6 +1,5 @@
 package com.codecool.robodog2.dao;
 
-import com.codecool.robodog2.model.Dog;
 import com.codecool.robodog2.model.Pedigree;
 
 import java.util.List;
@@ -16,9 +15,9 @@ public interface PedigreeDao {
 
     void deletePedigree(long id);
 
-    void createPuppyPedigree(Pedigree pedigree, Dog littleDog);
+    void createPuppyPedigree(Pedigree pedigree);
 
-    public long getDad(long puppyId);
+    long getDad(long puppyId);
 
-    public long getMom(long puppyId);
+    long getMom(long puppyId);
 }

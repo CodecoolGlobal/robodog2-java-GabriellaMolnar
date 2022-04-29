@@ -25,6 +25,12 @@ public class Pedigree {
         this.dadId = pedigreeForADogDto.getDadId();
     }
 
+    public Pedigree(long puppyId, long momId, long dadId) {
+        this.puppyId = puppyId;
+        this.momId = momId;
+        this.dadId = dadId;
+    }
+
     public long getId() {
         return id;
     }

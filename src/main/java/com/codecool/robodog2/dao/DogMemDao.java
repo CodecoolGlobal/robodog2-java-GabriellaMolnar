@@ -1,11 +1,13 @@
 package com.codecool.robodog2.dao;
 
 import com.codecool.robodog2.model.Dog;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository("dogMemDao")
 public class DogMemDao implements DogDAO {
     private List<Dog> dogList = new ArrayList<>();
     private AtomicLong id = new AtomicLong();

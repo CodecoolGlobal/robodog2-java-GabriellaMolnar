@@ -5,11 +5,11 @@ import com.codecool.robodog2.model.Trick;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
+@Repository("trickJdbcDao")
 public class TrickJdbcDao implements TrickDAO {
     private static final Logger log = LoggerFactory.getLogger(DogJdbcDao.class);
     private JdbcTemplate jdbcTemplate;
@@ -45,7 +45,7 @@ public class TrickJdbcDao implements TrickDAO {
     @Override
     public void updateTrick(Trick trick, long id) {
         String sql = "UPDATE trick SET name = ? WHERE id = ?";
-        int update =  jdbcTemplate.update(sql, trick.getName(), id);
+        int update = jdbcTemplate.update(sql, trick.getName(), id);
         if (update == 1) {
             log.info("Trick updated " + trick.getName());
         }
