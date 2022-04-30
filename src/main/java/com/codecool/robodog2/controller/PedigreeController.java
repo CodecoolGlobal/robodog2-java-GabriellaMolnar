@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping
@@ -47,11 +48,12 @@ public class PedigreeController {
     }
 
     @GetMapping("/dog/{dog_id}/pedigree")
-    public List<Integer> getFamily(@PathVariable("dog_id") long puppyId){
-       return pedigreeService.getFamily(puppyId);
+    public List<Integer> getFamily(@PathVariable("dog_id") long puppyId) {
+        return pedigreeService.getFamily(puppyId);
     }
+
     @PostMapping("/dog/{dog_id}/pedigree")
-    public void addPedigreeForADog(@PathVariable("dog_id") long puppyId, @RequestBody PedigreeForADogDto pedigreeForADogDtoDto){
+    public void addPedigreeForADog(@PathVariable("dog_id") long puppyId, @RequestBody PedigreeForADogDto pedigreeForADogDtoDto) {
         pedigreeService.addPedigreeForADog(puppyId, pedigreeForADogDtoDto);
     }
 
@@ -61,11 +63,17 @@ public class PedigreeController {
     }
 
     @GetMapping("/dog/{dog_id}/pedigree/dad")
-    public  Dog  getDad(@PathVariable("dog_id") long puppyId){
+    public Dog getDad(@PathVariable("dog_id") long puppyId) {
         return pedigreeService.getDad(puppyId);
     }
+
     @GetMapping("/dog/{dog_id}/pedigree/mom")
-    public Dog getMom(@PathVariable("dog_id") long puppyId){
+    public Dog getMom(@PathVariable("dog_id") long puppyId) {
         return pedigreeService.getMom(puppyId);
+    }
+
+    @GetMapping("/dog/{dog_id}/pedigree/siblings")
+    public Set<Dog> getSiblings(@PathVariable("dog_id") long id){
+        return pedigreeService.getSiblings(id);
     }
 }

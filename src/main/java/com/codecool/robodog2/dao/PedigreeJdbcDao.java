@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository("pedigreeJdbcDao")
 public class PedigreeJdbcDao implements PedigreeDao {
@@ -74,14 +75,15 @@ public class PedigreeJdbcDao implements PedigreeDao {
         addPedigree(pedigree);
     }
 
-    public long getDad(long puppyId) {
+    @Override
+    public Optional<Long> getDad(long puppyId) {
         String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE puppy_id = ?";
-        return jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId).getDadId();
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId).getDadId());
     }
 
     @Override
-    public long getMom(long puppyId) {
+    public Optional<Long>  getMom(long puppyId) {
         String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE puppy_id = ?";
-        return jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId).getMomId();
+        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId).getMomId());
     }
 }

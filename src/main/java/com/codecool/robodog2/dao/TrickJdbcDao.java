@@ -37,7 +37,6 @@ public class TrickJdbcDao implements TrickDAO {
 
     @Override
     public Trick getTrick(long id) {
-        //TODO
         String sql = "SELECT id, name from trick WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, trickMapper, id);
     }

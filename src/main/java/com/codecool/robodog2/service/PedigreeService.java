@@ -1,7 +1,6 @@
 package com.codecool.robodog2.service;
 
 import com.codecool.robodog2.dao.DogDAO;
-import com.codecool.robodog2.dao.DogJdbcDao;
 import com.codecool.robodog2.dao.PedigreeJdbcDao;
 import com.codecool.robodog2.dto.PedigreeDto;
 import com.codecool.robodog2.dto.PedigreeForADogDto;
@@ -13,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class PedigreeService {
@@ -78,10 +76,24 @@ public class PedigreeService {
     }
 
     public Dog getDad(long puppyId) {
-        return dogDAO.getDog(pedigreeJdbcDao.getDad(puppyId));
+        return dogDAO.getDog(pedigreeJdbcDao.getDad(puppyId).orElse(null));
     }
 
     public Dog getMom(long puppyId) {
-        return dogDAO.getDog(pedigreeJdbcDao.getMom(puppyId));
+        return dogDAO.getDog(pedigreeJdbcDao.getMom(puppyId).orElse(null));
+    }
+
+    public Set<Dog> getSiblings(long id) {
+        List<Dog> dogList = dogDAO.listDogs();
+        Set<Dog> siblings = new HashSet<>();
+        for (Dog dog : dogList) {
+            //TODO nem működik
+            boolean sameMom = pedigreeJdbcDao.getMom(dog.getId()).orElse(null) == pedigreeJdbcDao.getMom(id).orElse(null);
+            boolean sameDad = pedigreeJdbcDao.getDad(dog.getId()).orElse(null) == pedigreeJdbcDao.getDad(id).orElse(null);
+            if (sameMom || sameDad) {
+                siblings.add(dog);
+            }
+        }
+        return siblings;
     }
 }
