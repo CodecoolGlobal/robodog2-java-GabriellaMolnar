@@ -47,9 +47,10 @@ public class PedigreeController {
         pedigreeService.deletePedigree(id);
     }
 
+
     @GetMapping("/dog/{dog_id}/pedigree")
-    public List<Integer> getFamily(@PathVariable("dog_id") long puppyId) {
-        return pedigreeService.getFamily(puppyId);
+    public Set<Dog> getFamily(@PathVariable("dog_id") long dogId) {
+        return pedigreeService.getFamily(dogId);
     }
 
     @PostMapping("/dog/{dog_id}/pedigree")

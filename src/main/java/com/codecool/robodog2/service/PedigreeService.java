@@ -46,8 +46,30 @@ public class PedigreeService {
         pedigreeJdbcDao.deletePedigree(id);
     }
 
-    public List<Integer> getFamily(long puppyId) {
-        return pedigreeJdbcDao.getFamily(puppyId);
+
+    public Set<Dog> getCloseFamily(long dogId) {
+        Set<Dog> closeFamily = new HashSet<>();
+
+        Dog dad = getDad(dogId);
+        if (dad != null) closeFamily.add(dad);
+
+        Dog mom = getMom(dogId);
+        if (mom != null) closeFamily.add(mom);
+
+        closeFamily.addAll(getChildren(dogId));
+
+        return closeFamily;
+    }
+
+    public Set<Dog> getFamily(long dogId) {
+        Set<Dog> family = new HashSet<>();
+        //TODO recursion
+        Set<Dog> closeFamilySet = getCloseFamily(dogId);
+        for (Dog dog : closeFamilySet) {
+            Set<Dog> thisDogFamily = getCloseFamily(dog.getId());
+            family.addAll(thisDogFamily);
+        }
+        return family;
     }
 
     public void addPedigreeForADog(long puppyId, PedigreeForADogDto pedigreeForADogDto) {
@@ -85,6 +107,18 @@ public class PedigreeService {
     public Dog getMom(long puppyId) {
         if (pedigreeJdbcDao.getMom(puppyId).isPresent()) {
             return dogDAO.getDog(pedigreeJdbcDao.getMom(puppyId).get());
+        }
+        return null;
+    }
+
+    public Set<Dog> getChildren(long dogId) {
+        if (pedigreeJdbcDao.getChildren(dogId).isPresent()) {
+            Set<Long> childrenIds = new HashSet<>(pedigreeJdbcDao.getChildren(dogId).get());
+            Set<Dog> children = new HashSet<>();
+            for (Long childrenId : childrenIds) {
+                children.add(dogDAO.getDog(childrenId));
+            }
+            return children;
         }
         return null;
     }

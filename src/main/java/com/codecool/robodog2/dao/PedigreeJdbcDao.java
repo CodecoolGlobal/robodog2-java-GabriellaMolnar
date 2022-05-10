@@ -1,7 +1,6 @@
 package com.codecool.robodog2.dao;
 
 import com.codecool.robodog2.dao.mapper.PedigreeMapper;
-import com.codecool.robodog2.model.Dog;
 import com.codecool.robodog2.model.Pedigree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +8,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository("pedigreeJdbcDao")
 public class PedigreeJdbcDao implements PedigreeDao {
@@ -58,10 +60,17 @@ public class PedigreeJdbcDao implements PedigreeDao {
         jdbcTemplate.update(sql, id);
     }
 
-    public List<Integer> getFamily(long puppyId) {
-        String sql = "SELECT id FROM pedigree where id = ?";
-        //TODO
-        return null; //jdbcTemplate.query(sql, pedigreeMapper, id);
+    public Optional<List<Long>> getChildren(long  dogId) {
+        Optional<List<Long>> result;
+        try {
+            String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE mom_id = ? OR dad_id = ?";
+            List<Pedigree>  pedigrees = jdbcTemplate.query(sql, pedigreeMapper, dogId, dogId);
+            List<Long> resultList = pedigrees.stream().map(Pedigree::getPuppyId).collect(Collectors.toList());
+            result = Optional.ofNullable(resultList);
+        } catch (EmptyResultDataAccessException e) {
+            result = Optional.empty();
+        }
+        return result;
     }
 
     public void addPedigreeForADog(Pedigree pedigree) {
