@@ -1,9 +1,11 @@
 package com.codecool.robodog2.dao;
 
 import com.codecool.robodog2.dao.mapper.PedigreeMapper;
+import com.codecool.robodog2.model.Dog;
 import com.codecool.robodog2.model.Pedigree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -77,13 +79,30 @@ public class PedigreeJdbcDao implements PedigreeDao {
 
     @Override
     public Optional<Long> getDad(long puppyId) {
-        String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE puppy_id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId).getDadId());
+        Optional<Pedigree> pedigree;
+        Optional<Long> result;
+        try {
+            String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE puppy_id = ?";
+            pedigree = Optional.ofNullable(jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId));
+            result = Optional.of(pedigree.get().getDadId());
+        } catch (EmptyResultDataAccessException e) {
+            result = Optional.empty();
+        }
+        return result;
     }
 
     @Override
-    public Optional<Long>  getMom(long puppyId) {
-        String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE puppy_id = ?";
-        return Optional.ofNullable(jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId).getMomId());
+    public Optional<Long> getMom(long puppyId) {
+        Optional<Pedigree> pedigree;
+        Optional<Long> result;
+        try {
+            String sql = "SELECT id, puppy_id, mom_id, dad_id from pedigree WHERE puppy_id = ?";
+            pedigree = Optional.ofNullable(jdbcTemplate.queryForObject(sql, pedigreeMapper, puppyId));
+            result = Optional.of(pedigree.get().getMomId());
+        } catch (EmptyResultDataAccessException e) {
+            result = Optional.empty();
+        }
+        return result;
     }
+
 }

@@ -76,20 +76,40 @@ public class PedigreeService {
     }
 
     public Dog getDad(long puppyId) {
-        return dogDAO.getDog(pedigreeJdbcDao.getDad(puppyId).orElse(null));
+        if (pedigreeJdbcDao.getDad(puppyId).isPresent()) {
+            return dogDAO.getDog(pedigreeJdbcDao.getDad(puppyId).get());
+        }
+        return null;
     }
 
     public Dog getMom(long puppyId) {
-        return dogDAO.getDog(pedigreeJdbcDao.getMom(puppyId).orElse(null));
+        if (pedigreeJdbcDao.getMom(puppyId).isPresent()) {
+            return dogDAO.getDog(pedigreeJdbcDao.getMom(puppyId).get());
+        }
+        return null;
     }
 
     public Set<Dog> getSiblings(long id) {
         List<Dog> dogList = dogDAO.listDogs();
         Set<Dog> siblings = new HashSet<>();
         for (Dog dog : dogList) {
-            //TODO nem működik
-            boolean sameMom = pedigreeJdbcDao.getMom(dog.getId()).orElse(null) == pedigreeJdbcDao.getMom(id).orElse(null);
-            boolean sameDad = pedigreeJdbcDao.getDad(dog.getId()).orElse(null) == pedigreeJdbcDao.getDad(id).orElse(null);
+            if (dog.getId() == id) {
+                continue;
+            }
+            boolean sameMom = false;
+            boolean sameDad = false;
+            Optional<Long> dogMom = pedigreeJdbcDao.getMom(dog.getId());
+            Optional<Long> actDogMom = pedigreeJdbcDao.getMom(id);
+            if (dogMom.isPresent() && actDogMom.isPresent()) {
+                Long mom1 = dogMom.get();
+                Long mom2 = actDogMom.get();
+                sameMom = mom1.equals(mom2);
+            }
+
+            if (pedigreeJdbcDao.getDad(dog.getId()).isPresent() && pedigreeJdbcDao.getDad(id).isPresent()) {
+                sameDad = pedigreeJdbcDao.getDad(dog.getId()).get().equals(pedigreeJdbcDao.getDad(id).get());
+            }
+
             if (sameMom || sameDad) {
                 siblings.add(dog);
             }

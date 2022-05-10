@@ -2,7 +2,6 @@ package com.codecool.robodog2.service;
 
 import com.codecool.robodog2.dto.DogDto;
 import com.codecool.robodog2.model.Breed;
-import com.codecool.robodog2.model.Dog;
 
 import java.util.Random;
 
