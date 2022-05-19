@@ -48,7 +48,7 @@ public class DogJdbcDao implements DogDAO {
         try {
             dog = jdbcTemplate.queryForObject(sql, dogMapper, id);
         } catch (DataAccessException ex) {
-            log.info("Course not found" + id);
+            log.info("Dog not found" + id);
         }
         return dog;
     }
@@ -79,12 +79,6 @@ public class DogJdbcDao implements DogDAO {
                     return ps;
                 }, keyHolder
         );
-       /*
-        int insert = jdbcTemplate.update(sql, Statement.RETURN_GENERATED_KEYS, dog.getBreed(), dog.getName(), dog.getAge());
-        if (insert == 1) {
-            log.info("Dog inserted " + dog.getName());
-        }
-      */
         return keyHolder.getKey().longValue();
     }
 
