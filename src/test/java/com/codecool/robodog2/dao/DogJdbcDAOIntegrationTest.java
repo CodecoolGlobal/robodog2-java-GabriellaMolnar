@@ -1,6 +1,8 @@
 package com.codecool.robodog2.dao;
 
 import com.codecool.robodog2.dao.mapper.DogMapper;
+import com.codecool.robodog2.model.Breed;
+import com.codecool.robodog2.model.Dog;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,28 +34,51 @@ public class DogJdbcDAOIntegrationTest {
 
     @Test
     void addDogTest() {
-        //TODO
+        dogJdbcDao.addDog(new Dog(Breed.BULLDOG, "Lujza", 5));
+        assertEquals(1, dogJdbcDao.listDogs().size());
+        assertEquals("Lujza", dogJdbcDao.listDogs().get(0).getName());
         assertEquals(4, 4);
 
     }
 
     @Test
     void listDogTest() {
-        //TODO
+        dogJdbcDao.addDog(new Dog(Breed.BULLDOG, "Lujza", 5));
+        dogJdbcDao.addDog(new Dog(Breed.LABRADOR, "Tom", 2));
+        assertEquals(2, dogJdbcDao.listDogs().size());
     }
 
     @Test
     void getAtDogTest() {
-        //TODO
+        dogJdbcDao.addDog(new Dog(Breed.BULLDOG, "Lujza", 5));
+        assertEquals(5, dogJdbcDao.getDog(1).getAge());
+        assertEquals(Breed.BULLDOG, dogJdbcDao.getDog(1).getBreed());
+        assertEquals("Lujza", dogJdbcDao.getDog(1).getName());
+
     }
 
     @Test
     void updateDogTest() {
-        //TODO
+        dogJdbcDao.addDog(new Dog(Breed.BULLDOG, "Lujza", 5));
+        Dog updateData = new Dog(Breed.LABRADOR, "Tom", 2);
+        updateData.setId(1);
+        dogJdbcDao.updateDog(updateData, 1);
+        assertEquals(2, dogJdbcDao.getDog(1).getAge());
+        assertEquals(Breed.LABRADOR, dogJdbcDao.listDogs().get(0).getBreed());
     }
 
     @Test
     void deleteDogTest() {
-        //TODO
+        dogJdbcDao.addDog(new Dog(Breed.BULLDOG, "Lujza", 5));
+        dogJdbcDao.addDog(new Dog(Breed.LABRADOR, "Tom", 2));
+        assertEquals(2, dogJdbcDao.listDogs().size());
+        dogJdbcDao.deleteDog(1);
+        assertEquals(1, dogJdbcDao.listDogs().size());
+    }
+
+    @Test
+    void addDogAndReturnIdTest() {
+        Long id = dogJdbcDao.addDogAndReturnId(new Dog(Breed.BULLDOG, "Lujza", 5));
+        assertEquals(1, id);
     }
 }
